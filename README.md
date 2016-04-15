@@ -1,2 +1,29 @@
 # MuraInvoicing
-Mura Plugin for Business Invoicing
+
+This is a Mura CMS plugin using [FW/1 - Framework One](https://github.com/framework-one/fw1) 
+as its application framework.
+
+## PLEASE READ
+
+### Minimum Requirements
+	* Mura CMS v.6.1+
+	* Adobe ColdFusion 10.0.14+ or Railo 4.1+
+
+
+## Important Notes
+
+
+### Important Files
+
+
+## Additional Resources
+
+
+## License
+Copyright 2016 {Author's Name}.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
