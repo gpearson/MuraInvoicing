@@ -35,6 +35,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 </cfsilent>
 <cfsavecontent variable="local.newBody">
 	<cfoutput>
+		<link rel="stylesheet" href="/plugins/MuraInvoicing/library/bootstrap/css/bootstrap-theme.min.css" crossorigin="anonymous">
 		<div class="container-murafw1">
 
 			<!--- PRIMARY NAV --->
@@ -48,11 +49,17 @@ http://www.apache.org/licenses/LICENSE-2.0
 							<li class="<cfif rc.action contains 'admin:main'>active</cfif>">
 								<a href="##" class="dropdown-toggle" data-toggle="dropdown">Main <b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li class="<cfif rc.action eq 'admin:main.default'>active</cfif>">
-										<a href="#buildURL('admin:main')#"><i class="icon-home"></i> Home</a>
+									<li class="<cfif rc.action eq 'admin:customers.default'>active</cfif>">
+										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> Customers</a>
 									</li>
-									<li class="<cfif rc.action contains 'admin:main.another'>active</cfif>">
-										<a href="#buildURL('admin:main.another')#"><i class="icon-leaf"></i> Another Page</a>
+									<li class="<cfif rc.action contains 'admin:products'>active</cfif>">
+										<a href="#buildURL('admin:products')#"><i class="icon-leaf"></i> Products</a>
+									</li>
+									<li class="<cfif rc.action contains 'admin:services'>active</cfif>">
+										<a href="#buildURL('admin:services')#"><i class="icon-leaf"></i> Services</a>
+									</li>
+									<li class="<cfif rc.action contains 'admin:users'>active</cfif>">
+										<a href="#buildURL('admin:users')#"><i class="icon-leaf"></i> Users</a>
 									</li>
 								</ul>
 							</li>
@@ -70,16 +77,16 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 			<!--- MAIN CONTENT AREA --->
 			<div class="row-fluid">
-				<cfif rc.action contains 'admin:main'>
+				<cfif rc.action contains 'admin:customers'>
 
 					<!--- SUB-NAV --->
 					<div class="span3">
 						<ul class="nav nav-list murafw1-sidenav">
-							<li class="<cfif rc.action eq 'admin:main.default'>active</cfif>">
+							<li class="<cfif rc.action eq 'admin:custoemrs.default'>active</cfif>">
 								<a href="#buildURL('admin:main')#"><i class="icon-home"></i> Home</a>
 							</li>
-							<li class="<cfif rc.action eq 'admin:main.another'>active</cfif>">
-								<a href="#buildURL('admin:main.another')#"><i class="icon-leaf"></i> Another Page</a>
+							<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+								<a href="#buildURL('admin:customers.newcustomer')#"><i class="icon-leaf"></i> New Customer</a>
 							</li>
 						</ul>
 					</div>
