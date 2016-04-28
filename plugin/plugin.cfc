@@ -105,6 +105,35 @@ component persistent="false" accessors="true" output="false" extends="mura.plugi
 				 abort;
 			}
 		}
+
+		var dbCheckTables = new query();
+		dbCheckTables.setDatasource("#application.configBean.getDatasource()#");
+		dbCheckTables.setSQL("Show Tables LIKE 'p_inv_PaymentTerms'");
+		var dbCheckTablesResults = dbCheckTables.execute();
+
+		if (dbCheckTablesResults.getResult().recordcount eq 0) {
+			// Since the Database Table does not exists, Lets Create it
+			var dbCreateTable = new query();
+			dbCreateTable.setDatasource("#application.configBean.getDatasource()#");
+			dbCreateTable.setSQL("CREATE TABLE `p_inv_PaymentTerms` ( `TContent_ID` int(11) NOT NULL, `Site_ID` varchar(20) NOT NULL, `PaymentTerms` tinytext NOT NULL, `dateCreated` datetime NOT NULL, `lastUpdated` datetime DEFAULT NULL, `lastUpdateBy` tinytext, PRIMARY KEY (`TContent_ID`) ) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+			var dbCreateTableResults = dbCreateTable.execute();
+		} else {
+			// Database Table Exists, We must Drop it to create it again
+			var dbDropTable = new query();
+			dbDropTable.setDatasource("#application.configBean.getDatasource()#");
+			dbDropTable.setSQL("DROP TABLE p_inv_PaymentTerms");
+			var dbDropTableResults = dbDropTable.execute();
+
+			if (len(dbDropTableResults.getResult()) eq 0) {
+				var dbCreateTable = new query();
+				dbCreateTable.setDatasource("#application.configBean.getDatasource()#");
+				dbCreateTable.setSQL("CREATE TABLE `p_inv_PaymentTerms` ( `TContent_ID` int(11) NOT NULL, `Site_ID` varchar(20) NOT NULL, `PaymentTerms` tinytext NOT NULL, `dateCreated` datetime NOT NULL, `lastUpdated` datetime DEFAULT NULL, `lastUpdateBy` tinytext, PRIMARY KEY (`TContent_ID`) ) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+				var dbCreateTableResults = dbCreateTable.execute();
+			} else {
+				 writedump(dbDropTableResults.getResult());
+				 abort;
+			}
+		}
 	}
 
 	public void function update() {
