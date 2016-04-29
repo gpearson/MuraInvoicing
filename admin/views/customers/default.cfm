@@ -57,7 +57,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 					</cfcase>
 				</cfswitch>
 			</cfif>
-			<div class="well">
 			<table class="table table-striped table-bordered" cellspacing="0" width="100%">
 				<thead>
 					<tr>

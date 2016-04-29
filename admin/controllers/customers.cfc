@@ -358,6 +358,34 @@ http://www.apache.org/licenses/LICENSE-2.0
 						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
 					</cfquery>
 				</cfif>
+				<cfif LEN(FORM.MailingAddress)>
+					<cfquery name="updateBusinessMailingAddress" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Update p_inv_Customers
+						Set MailingAddress = <cfqueryparam value="#FORM.MailingAddress#" cfsqltype="cf_sql_varchar">
+						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+				</cfif>
+				<cfif LEN(FORM.MailingCity)>
+					<cfquery name="updateBusinessMailingCity" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Update p_inv_Customers
+						Set MailingCity = <cfqueryparam value="#FORM.MailingCity#" cfsqltype="cf_sql_varchar">
+						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+				</cfif>
+				<cfif LEN(FORM.MailingState)>
+					<cfquery name="updateBusinessMailingState" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Update p_inv_Customers
+						Set MailingState = <cfqueryparam value="#FORM.MailingState#" cfsqltype="cf_sql_varchar">
+						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+				</cfif>
+				<cfif LEN(FORM.MailingZipCode)>
+					<cfquery name="updateBusinessMailingZipCode" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Update p_inv_Customers
+						Set MailingZipCode = <cfqueryparam value="#FORM.MailingZipCode#" cfsqltype="cf_sql_varchar">
+						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+				</cfif>
 				<cflocation url="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers&UserAction=AddedCustomer&SiteID=#rc.$.siteConfig('siteID')#&Successful=true" addtoken="false">
 			</cfif>
 		</cfif>
@@ -367,14 +395,24 @@ http://www.apache.org/licenses/LICENSE-2.0
 		<cfargument name="rc" required="true" type="struct" default="#StructNew()#">
 		<cfif not isDefined("FORM.formSubmit")>
 			<cflock timeout="60" scope="Session" type="Exclusive">
-				<cfset Session.FormErrors = #ArrayNew()#>
+				<cfif not isDefined("Session.FormErrors")>
+					<cfset Session.FormErrors = #ArrayNew()#>
+				</cfif>
 			</cflock>
 			<cfquery name="Session.getBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
-				Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, PhysicalZip4, dateCreated, PrimaryVoiceNumber, BusinessWebsite, BusinessFax, lastUpdated, lastUpdateBy, Site_ID, Active
+				Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, PhysicalZip4, MailingAddress, MailingCity, MailingState, MailingZipCode, dateCreated, PrimaryVoiceNumber, BusinessWebsite, BusinessFax, lastUpdated, lastUpdateBy, Site_ID, Active, PaymentTerms, GeoCode_Latitude, GeoCode_Longitude, GeoCode_Township, GeoCode_CountyName
 				From p_inv_Customers
 				Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#"> and
 					TContent_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.RecNo#">
 				Order by BusinessName
+			</cfquery>
+
+			<cfquery name="Session.getPaymentTerms" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+				Select TContent_ID, PaymentTerms, dateCreated, lastUpdated, lastUpdateBy, Active
+				From p_inv_PaymentTerms
+				Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#"> and
+					Active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				Order by PaymentTerms
 			</cfquery>
 		<cfelseif isDefined("FORM.formSubmit")>
 			<cfif isDefined("URL.PerformAction")>
@@ -392,12 +430,34 @@ http://www.apache.org/licenses/LICENSE-2.0
 					</cfcase>
 					<cfcase value="Edit">
 						<cfquery name="Session.getSelectedClient" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
-							Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, PhysicalZip4, dateCreated, PrimaryVoiceNumber, BusinessWebsite, BusinessFax, lastUpdated, lastUpdateBy, Site_ID, Active
+							Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, PhysicalZip4, MailingAddress, MailingCity, MailingState, MailingZipCode, dateCreated, PrimaryVoiceNumber, BusinessWebsite, BusinessFax, lastUpdated, lastUpdateBy, Site_ID, Active, PaymentTerms
 							From p_inv_Customers
 							Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#"> and
 								TContent_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.CustomerRecID#">
 							Order by BusinessName
 						</cfquery>
+
+						<cfif FORM.PaymentTerms EQ "----">
+							<cflock timeout="60" scope="SESSION" type="Exclusive">
+								<cfset Session.FormErrors = #ArrayNew()#>
+								<cfscript>
+									address = {property="PaymentTerms",message="Please Select Payment Terms for this Customer"};
+									arrayAppend(Session.FormErrors, address);
+								</cfscript>
+							</cflock>
+							<cflocation url="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers.updatecustomer&PerformAction=Edit&ActionItem=MissingInfo&SiteID=#rc.$.siteConfig('siteID')#&RecNo=#FORM.CustomerRecID#" addtoken="true">
+						</cfif>
+
+						<cfif FORM.Active EQ "----">
+							<cflock timeout="60" scope="SESSION" type="Exclusive">
+								<cfset Session.FormErrors = #ArrayNew()#>
+								<cfscript>
+									address = {property="Active",message="Please Select if Business is Active or Not"};
+									arrayAppend(Session.FormErrors, address);
+								</cfscript>
+							</cflock>
+							<cflocation url="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers.updatecustomer&PerformAction=Edit&ActionItem=MissingInfo&SiteID=#rc.$.siteConfig('siteID')#&RecNo=#FORM.CustomerRecID#" addtoken="true">
+						</cfif>
 
 						<cflock timeout="60" scope="SESSION" type="Exclusive">
 							<cfset Session.FormData = #StructCopy(FORM)#>
@@ -411,6 +471,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 						<cfparam name="UpdateInfo.VoiceNumberUpdated" type="boolean" default="0">
 						<cfparam name="UpdateInfo.BusinessFaxUpdated" type="boolean" default="0">
 						<cfparam name="UpdateInfo.WebsiteUpdated" type="boolean" default="0">
+						<cfparam name="UpdateInfo.BusinessActive" type="boolean" default="0">
+						<cfparam name="UpdateInfo.PaymentTerms" type="boolean" default="0">
+						<cfparam name="UpdateInfo.MailingAddress" type="boolean" default="0">
+						<cfparam name="UpdateInfo.MailingCity" type="boolean" default="0">
+						<cfparam name="UpdateInfo.MailingState" type="boolean" default="0">
+						<cfparam name="UpdateInfo.MailingZipCode" type="boolean" default="0">
 
 						<cfif Session.getSelectedClient.BusinessName NEQ Form.BusinessName><cfset UpdateInfo.NameUpdated = 1></cfif>
 						<cfif Session.getSelectedClient.PhysicalAddress NEQ Form.BusinessAddress><cfset UpdateInfo.AddressUpdated = 1></cfif>
@@ -420,6 +486,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 						<cfif Session.getSelectedClient.PrimaryVoiceNumber NEQ Form.BusinessVoice><cfset UpdateInfo.VoiceNumberUpdated = 1></cfif>
 						<cfif Session.getSelectedClient.BusinessWebsite NEQ Form.BusinessWebsite><cfset UpdateInfo.WebsiteUpdated = 1></cfif>
 						<cfif Session.getSelectedClient.BusinessFax NEQ Form.BusinessFax><cfset UpdateInfo.BusinessFaxUpdated = 1></cfif>
+						<cfif Session.getSelectedClient.Active NEQ Form.Active><cfset UpdateInfo.BusinessActive = 1></cfif>
+						<cfif Session.getSelectedClient.PaymentTerms NEQ Form.PaymentTerms><cfset UpdateInfo.PaymentTerms = 1></cfif>
+						<cfif Session.getSelectedClient.MailingAddress NEQ Form.MailingAddress><cfset UpdateInfo.MailingAddress = 1></cfif>
+						<cfif Session.getSelectedClient.MailingCity NEQ Form.MailingCity><cfset UpdateInfo.MailingCity = 1></cfif>
+						<cfif Session.getSelectedClient.MailingState NEQ Form.MailingState><cfset UpdateInfo.MailingState = 1></cfif>
+						<cfif Session.getSelectedClient.MailingZipCode NEQ Form.MailingZipCode><cfset UpdateInfo.MailingZipCode = 1></cfif>
 
 						<cfif UpdateInfo.AddressUpdated EQ 1 OR UpdateInfo.CityUpdated EQ 1 OR UpdateInfo.StateUpdated EQ 1 OR UpdateInfo.ZipCodeUpdated EQ 1>
 							<cfset AddressGeoCoded = #GeoCodeAddress(Form.BusinessAddress, FORM.BusinessCity, FORM.BusinessState, FORM.BusinessZipCode)#>
@@ -464,6 +536,44 @@ http://www.apache.org/licenses/LICENSE-2.0
 								</cfif>
 							</cfif>
 						</cfif>
+
+						<cfif UpdateInfo.MailingAddress EQ 1 OR UpdateInfo.MailingCity EQ 1 OR UpdateInfo.MailingState EQ 1 OR UpdateInfo.MailingZipCode EQ 1>
+							<cfset MailingAddressGeoCoded = #GeoCodeAddress(Form.MailingAddress, FORM.MailingCity, FORM.MailingState, FORM.MailingZipCode)#>
+							<cfset CombinedPhysicalAddress = #MailingAddressGeoCoded[1].AddressStreetNumber# & " " & #MailingAddressGeoCoded[1].AddressStreetNameShort#>
+							<cfquery name="updateMailingAddress" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+								Update p_inv_Customers
+								Set MailingAddress = <cfqueryparam value="#Trim(Variables.CombinedPhysicalAddress)#" cfsqltype="cf_sql_varchar">,
+									MailingCity = <cfqueryparam value="#Trim(Variables.MailingAddressGeoCoded[1].AddressCityName)#" cfsqltype="cf_sql_varchar">,
+									MailingState = <cfqueryparam value="#Trim(Variables.MailingAddressGeoCoded[1].AddressStateNameShort)#" cfsqltype="cf_sql_varchar">,
+									MailingZipCode = <cfqueryparam value="#Trim(Variables.MailingAddressGeoCoded[1].AddressZipCode)#" cfsqltype="cf_sql_varchar">
+									, lastUpdated = #Now()#, lastUpdateBy = <cfqueryparam value="#rc.$.currentUser('userName')#" cfsqltype="cf_sql_varchar">
+								Where Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar"> and
+									TContent_ID = <cfqueryparam value="#Session.getSelectedClient.TContent_ID#" cfsqltype="cf_sql_integer">
+							</cfquery>
+						</cfif>
+
+						<cfif UpdateInfo.BusinessActive EQ 1>
+							<cfquery name="updateBusinessActive" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+								Update p_inv_Customers
+								Set Active = <cfqueryparam value="#Trim(Form.Active)#" cfsqltype="cf_sql_bit">,
+									lastUpdated = #Now()#,
+									lastUpdateBy = <cfqueryparam value="#rc.$.currentUser('userName')#" cfsqltype="cf_sql_varchar">
+								Where Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar"> and
+									TContent_ID = <cfqueryparam value="#Session.getSelectedClient.TContent_ID#" cfsqltype="cf_sql_integer">
+							</cfquery>
+						</cfif>
+
+						<cfif UpdateInfo.PaymentTerms EQ 1>
+							<cfquery name="updateFacilityName" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+								Update p_inv_Customers
+								Set PaymentTerms = <cfqueryparam value="#Trim(Form.PaymentTerms)#" cfsqltype="cf_sql_integer">,
+									lastUpdated = #Now()#,
+									lastUpdateBy = <cfqueryparam value="#rc.$.currentUser('userName')#" cfsqltype="cf_sql_varchar">
+								Where Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar"> and
+									TContent_ID = <cfqueryparam value="#Session.getSelectedClient.TContent_ID#" cfsqltype="cf_sql_integer">
+							</cfquery>
+						</cfif>
+
 						<cfif UpdateInfo.NameUpdated EQ 1>
 							<cfquery name="updateFacilityName" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
 								Update p_inv_Customers
@@ -497,7 +607,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 							</cfquery>
 						</cfif>
 
-						<cfif UpdateInfo.AddressUpdated EQ 0 AND UpdateInfo.CityUpdated EQ 0 AND UpdateInfo.StateUpdated EQ 0 AND UpdateInfo.ZipCodeUpdated EQ 0 AND UpdateInfo.NameUpdated EQ 0 AND UpdateInfo.VoiceNumberUpdated EQ 0 AND UpdateInfo.WebsiteUpdated EQ 0 AND UpdateInfo.BusinessFaxUpdated EQ 0>
+						<cfif UpdateInfo.AddressUpdated EQ 0 AND UpdateInfo.CityUpdated EQ 0 AND UpdateInfo.StateUpdated EQ 0 AND UpdateInfo.ZipCodeUpdated EQ 0 AND UpdateInfo.NameUpdated EQ 0 AND UpdateInfo.VoiceNumberUpdated EQ 0 AND UpdateInfo.WebsiteUpdated EQ 0 AND UpdateInfo.BusinessFaxUpdated EQ 0 and UpdateInfo.BusinessActive EQ 0 and UpdateInfo.PaymentTerms EQ 0 and UpdateInfo.MailingAddress EQ 1 AND UpdateInfo.MailingCity EQ 1 AND UpdateInfo.MailingState EQ 1 AND UpdateInfo.MailingZipCode EQ 1>
 							<cflocation url="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers" addtoken="false">
 						<cfelse>
 							<cflocation url="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers&UserAction=UpdatedCustomer&SiteID=#rc.$.siteConfig('siteID')#&Successful=true" addtoken="false">
@@ -507,4 +617,57 @@ http://www.apache.org/licenses/LICENSE-2.0
 			</cfif>
 		</cfif>
 	</cffunction>
+
+	<cffunction name="contacts" returntype="any" output="false">
+		<cfargument name="rc" required="true" type="struct" default="#StructNew()#">
+
+		<cfif not isDefined("URL.RecNo")>
+			<cfquery name="Session.getBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+				Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, dateCreated, lastUpdated, lastUpdateBy, Site_ID, Active
+				From p_inv_Customers
+				Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#">
+				Order by BusinessName
+			</cfquery>
+		<cfelse>
+			<cfquery name="Session.getBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+				Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, dateCreated, lastUpdated, lastUpdateBy, Site_ID, Active
+				From p_inv_Customers
+				Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#"> and
+					TContent_ID = <cfqueryparam value="#URL.RecNo#" cfsqltype="cf_sql_integer">
+				Order by BusinessName
+			</cfquery>
+		</cfif>
+
+
+	</cffunction>
+
+	<cffunction name="positions" returntype="any" output="false">
+		<cfargument name="rc" required="true" type="struct" default="#StructNew()#">
+
+		<cfif not isDefined("URL.RecNo")>
+			<cfquery name="Session.getBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+				Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, dateCreated, lastUpdated, lastUpdateBy, Site_ID, Active
+				From p_inv_Customers
+				Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#">
+				Order by BusinessName
+			</cfquery>
+		<cfelse>
+			<cfquery name="Session.getBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+				Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, dateCreated, lastUpdated, lastUpdateBy, Site_ID, Active
+				From p_inv_Customers
+				Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#"> and
+					TContent_ID = <cfqueryparam value="#URL.RecNo#" cfsqltype="cf_sql_integer">
+				Order by BusinessName
+			</cfquery>
+		</cfif>
+
+	</cffunction>
+
+	<cffunction name="paymentterms" returntype="any" output="false">
+		<cfargument name="rc" required="true" type="struct" default="#StructNew()#">
+
+
+
+	</cffunction>
+
 </cfcomponent>

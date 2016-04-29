@@ -78,7 +78,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 			<!--- MAIN CONTENT AREA --->
 			<div class="row-fluid">
 				<cfif rc.action contains 'admin:customers'>
-
 					<!--- SUB-NAV --->
 					<div class="span3">
 						<ul class="nav nav-list murafw1-sidenav">
@@ -87,6 +86,15 @@ http://www.apache.org/licenses/LICENSE-2.0
 							</li>
 							<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
 								<a href="#buildURL('admin:customers.newcustomer')#"><i class="icon-leaf"></i> New Customer</a>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers.contacts'>active</cfif>">
+								<a href="#buildURL('admin:customers.contacts')#"><i class="icon-leaf"></i> Contacts</a>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers.positions'>active</cfif>">
+								<a href="#buildURL('admin:customers.positions')#"><i class="icon-leaf"></i> Positions</a>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers.paymentterms'>active</cfif>">
+								<a href="#buildURL('admin:customers.paymentterms')#"><i class="icon-leaf"></i> Payment Terms</a>
 							</li>
 						</ul>
 					</div>
