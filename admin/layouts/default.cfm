@@ -40,39 +40,79 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 			<!--- PRIMARY NAV --->
 			<div class="row-fluid">
-				<div class="navbar navbar-murafw1">
+				<nav class="navbar navbar-murafw1">
 					<div class="navbar-inner">
-
-						<a class="plugin-brand" href="#buildURL('admin:main')#">#HTMLEditFormat(rc.pc.getPackage())#</a>
-
-						<ul class="nav">
-							<li class="<cfif rc.action contains 'admin:main'>active</cfif>">
-								<a href="##" class="dropdown-toggle" data-toggle="dropdown">Main <b class="caret"></b></a>
+						<div class="navbar-header">
+							<a class="navbar-brand">#HTMLEditFormat(rc.pc.getPackage())#</a>
+						</div>
+						<ul class="nav navbar-nav">
+							<li class="<cfif rc.action eq 'admin:main.default'>active</cfif>"><a href="#buildURL('admin:main')#">Home</a></li>
+							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:customers')#">Customers <span class="caret"></span></a>
 								<ul class="dropdown-menu">
-									<li class="<cfif rc.action eq 'admin:customers.default'>active</cfif>">
-										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> Customers</a>
+									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
 									</li>
-									<li class="<cfif rc.action contains 'admin:products'>active</cfif>">
-										<a href="#buildURL('admin:products')#"><i class="icon-leaf"></i> Products</a>
-									</li>
-									<li class="<cfif rc.action contains 'admin:services'>active</cfif>">
-										<a href="#buildURL('admin:services')#"><i class="icon-leaf"></i> Services</a>
-									</li>
-									<li class="<cfif rc.action contains 'admin:users'>active</cfif>">
-										<a href="#buildURL('admin:users')#"><i class="icon-leaf"></i> Users</a>
+									<li class="<cfif rc.action eq 'admin:customers.contacts'>active</cfif>">
+										<a href="#buildURL('admin:customers.contacts')#"><i class="icon-leaf"></i> Contacts</a>
 									</li>
 								</ul>
 							</li>
+							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:inventory')#">Inventory <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
+									</li>
+								</ul>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:invoices')#">Invoices <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+										<a href="#buildURL('admin:invoices.default')#"><i class="icon-home"></i> New Invoice</a>
+									</li>
+								</ul>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:services')#">Services <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
+									</li>
+								</ul>
+							</li>
+							<li class="<cfif rc.action eq 'admin:reports'>active</cfif> dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:reports')#">Reports <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
+									</li>
+								</ul>
+							</li>
+							<li class="<cfif rc.action eq 'admin:settings'>active</cfif> dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:settings')#">Settings <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li class="<cfif rc.action eq 'admin:settings.positions'>active</cfif>">
+										<a href="#buildURL('admin:settings.positions')#"><i class="icon-leaf"></i> Positions</a>
+									</li>
+									<li class="<cfif rc.action eq 'admin:settings.paymentterms'>active</cfif>">
+										<a href="#buildURL('admin:settings.paymentterms')#"><i class="icon-leaf"></i> Payment Terms</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
 							<li class="<cfif rc.action contains 'admin:license'>active</cfif>">
 								<a href="#buildURL('admin:license')#"><i class="icon-book"></i> License</a>
 							</li>
 							<li class="<cfif rc.action contains 'admin:instructions'>active</cfif>">
 								<a href="#buildURL('admin:instructions')#"><i class="icon-info-sign"></i> Instructions</a>
 							</li>
-						</ul><!--- /.nav --->
+						</ul>
+					</div>
+				</nav>
 
-					</div><!--- /.navbar-inner --->
-				</div><!--- /.navbar --->
 			</div><!--- /.row --->
 
 			<!--- MAIN CONTENT AREA --->
@@ -80,21 +120,14 @@ http://www.apache.org/licenses/LICENSE-2.0
 				<cfif rc.action contains 'admin:customers'>
 					<!--- SUB-NAV --->
 					<div class="span3">
-						<ul class="nav nav-list murafw1-sidenav">
-							<li class="<cfif rc.action eq 'admin:custoemrs.default'>active</cfif>">
-								<a href="#buildURL('admin:main')#"><i class="icon-home"></i> Home</a>
-							</li>
+						<ul class="nav nav-list">
+							<li><A href="#buildURL('admin:customers')#">Customers</a></li>
 							<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
 								<a href="#buildURL('admin:customers.newcustomer')#"><i class="icon-leaf"></i> New Customer</a>
 							</li>
+
 							<li class="<cfif rc.action eq 'admin:customers.contacts'>active</cfif>">
 								<a href="#buildURL('admin:customers.contacts')#"><i class="icon-leaf"></i> Contacts</a>
-							</li>
-							<li class="<cfif rc.action eq 'admin:customers.positions'>active</cfif>">
-								<a href="#buildURL('admin:customers.positions')#"><i class="icon-leaf"></i> Positions</a>
-							</li>
-							<li class="<cfif rc.action eq 'admin:customers.paymentterms'>active</cfif>">
-								<a href="#buildURL('admin:customers.paymentterms')#"><i class="icon-leaf"></i> Payment Terms</a>
 							</li>
 						</ul>
 					</div>
@@ -103,7 +136,59 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="span9">
 						#body#
 					</div>
+				<cfelseif rc.action contains 'admin:inventory'>
+					<!--- SUB-NAV --->
+					<div class="span3">
+						<ul class="nav nav-list">
+							<li><A href="#buildURL('admin:products')#">Products</a>
+								<ul class="nav nav-list tree">
+									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
+										<a href="#buildURL('admin:customers.newcustomer')#"><i class="icon-leaf"></i> New Customer</a>
+									</li>
+								</ul>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers.contacts'>active</cfif>">
+								<a href="#buildURL('admin:customers.contacts')#"><i class="icon-leaf"></i> Contacts</a>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers.positions'>active</cfif>">
+								<a href="#buildURL('admin:customers.positions')#"><i class="icon-leaf"></i> Positions</a>
+								<ul class="nav nav-list tree">
+									<a href="#buildURL('admin:customers.addpositions')#"><i class="icon-leaf"></i> Add Position</a>
+								</ul>
+							</li>
+							<li class="<cfif rc.action eq 'admin:customers.paymentterms'>active</cfif>">
+								<a href="#buildURL('admin:customers.paymentterms')#"><i class="icon-leaf"></i> Payment Terms</a>
+								<ul class="nav nav-list tree">
+									<a href="#buildURL('admin:customers.addpaymentterms')#"><i class="icon-leaf"></i> Add Payment Term</a>
+								</ul>
+							</li>
+						</ul>
+					</div>
 
+					<!--- BODY --->
+					<div class="span9">
+						#body#
+					</div>
+				<cfelseif rc.action contains 'admin:invoices'>
+				<cfelseif rc.action contains 'admin:services'>
+				<cfelseif rc.action contains 'admin:reports'>
+				<cfelseif rc.action contains 'admin:settings'>
+					<div class="span3">
+						<ul class="nav nav-list">
+							<li><A href="#buildURL('admin:settings')#">Settings</a></li>
+							<li class="<cfif rc.action eq 'admin:settings.positions'>active</cfif>">
+								<a href="#buildURL('admin:settings.positions')#"><i class="icon-leaf"></i> Positions</a>
+							</li>
+							<li class="<cfif rc.action eq 'admin:settings.paymentterms'>active</cfif>">
+								<a href="#buildURL('admin:settings.paymentterms')#"><i class="icon-leaf"></i> Payment Terms</a>
+							</li>
+						</ul>
+					</div>
+
+					<!--- BODY --->
+					<div class="span9">
+						#body#
+					</div>
 				<cfelse>
 
 					<!--- BODY --->
