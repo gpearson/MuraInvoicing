@@ -16,6 +16,19 @@ http://www.apache.org/licenses/LICENSE-2.0
 		<div class="panbel-body">
 			<cfif isDefined("URL.UserAction")>
 				<cfswitch expression="#URL.UserAction#">
+					<cfcase value="ADMUpdated">
+						<cfif isDefined("URL.Successful")>
+							<cfif URL.Successful EQ "true">
+								<div class="well well-lg">
+									You have successfully updated the Client's Student ADM numbers in the database
+								</div>
+							<cfelse>
+								<div class="well well-lg">
+									An Error has occurred and the customer record was not added to the database.
+								</div>
+							</cfif>
+						</cfif>
+					</cfcase>
 					<cfcase value="AddedCustomer">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
@@ -84,7 +97,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 								<td>#Session.getBusiness.PhysicalState#</td>
 								<td>#Session.getBusiness.PhysicalZipCode#</td>
 								<td><cfswitch expression="#Session.getBusiness.Active#"><cfcase value="1">Yes</cfcase><cfdefaultcase>No</cfdefaultcase></cfswitch></td>
-								<td><a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=Edit&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-warning btn-small">U</a><cfif Session.getBusiness.Active EQ 1>&nbsp;<a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=Delete&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-danger btn-small">D</a></cfif></td>
+								<td><a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=Edit&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-warning btn-small">U</a><cfif Session.getBusiness.Active EQ 1>&nbsp;<a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=Delete&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-danger btn-small">D</a></cfif><a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=UpdateADM&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-warning btn-small">ADM</a></td>
 							</tr>
 						</cfloop>
 					</tbody>

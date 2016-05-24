@@ -89,6 +89,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 						<label for="BusinessZipCode" class="control-label col-xs-2">Mailing ZipCode:&nbsp;</label>
 						<div class="col-xs-10"><cfinput type="text" validate="zipcode" size="10" class="form-control form-control-inline" name="MailingZipCode" required="no"></div>
 					</div>
+					<br /><br />
+					<div class="panel-heading"><h2>Membership Information</h2></div>
+					<div class="form-group">
+						<label for="StudentADM" class="control-label col-xs-2">Current ADM:&nbsp;</label>
+						<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="StudentADM" required="no"></div>
+					</div>
 				</div>
 				<div class="panel-footer">
 					<div class="pull-right"><cfinput type="Submit" name="AddClient" class="btn btn-primary" value="Add New Client"></div>

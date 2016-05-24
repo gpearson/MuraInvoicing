@@ -50,8 +50,11 @@ http://www.apache.org/licenses/LICENSE-2.0
 							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:customers')#">Customers <span class="caret"></span></a>
 								<ul class="dropdown-menu">
+									<li class="<cfif rc.action eq 'admin:customers.default'>active</cfif>">
+										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> List Customers</a>
+									</li>
 									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
-										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
+										<a href="#buildURL('admin:customers.newcustomer')#"><i class="icon-home"></i> New Customer</a>
 									</li>
 									<li class="<cfif rc.action eq 'admin:customers.contacts'>active</cfif>">
 										<a href="#buildURL('admin:customers.contacts')#"><i class="icon-leaf"></i> Contacts</a>

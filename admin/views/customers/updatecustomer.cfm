@@ -14,6 +14,95 @@ http://www.apache.org/licenses/LICENSE-2.0
 	<div class="panel panel-default">
 		<cfif isDefined("URL.PerformAction")>
 			<cfswitch expression="#URL.PerformAction#">
+				<cfcase value="UpdateADM">
+					<div class="panel-heading"><h1>Update Student ADM</h1></div>
+					<cfform action="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers.updatecustomer&PerformAction=#URL.PerformAction#" method="post" id="UpdateExistingCustomer" class="form-horizontal">
+						<cfinput type="hidden" name="SiteID" value="#rc.$.siteConfig('siteID')#">
+						<cfinput type="hidden" name="formSubmit" value="true">
+						<cfinput type="hidden" name="CustomerRecID" value="#URL.RecNo#">
+						<div class="panel-body">
+							<cfif isDefined("URL.UserAction")>
+								<div class="well">
+									<cfswitch expression="#URL.UserAction#">
+										<cfcase value="UpdatedClient">
+											<cfif isDefined("URL.Successful")>
+												<div class="well well-lg">
+													You have successfully updated the client record in the database
+												</div>
+											</cfif>
+										</cfcase>
+									</cfswitch>
+								</div>
+							</cfif>
+							<div class="well">Please update the current ADM for this Client.</div>
+							<div class="panel-heading"><h2>Customer Information</h2></div>
+							<div class="form-group">
+								<label for="BusinessName" class="control-label col-xs-2">Business Name:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="BusinessName" value="#Session.getBusiness.BusinessName#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessVoice" class="control-label col-xs-2">Business Voice:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" validate="telephone" size="20" class="form-control" value="#Session.getBusiness.PrimaryVoiceNumber#" name="BusinessVoice" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessFax" class="control-label col-xs-2">Business Fax:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" validate="telephone" size="20" class="form-control" name="BusinessFax" value="#Session.getBusiness.BusinessFax#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessWebsite" class="control-label col-xs-2">Business Website:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="BusinessWebsite" value="#Session.getBusiness.BusinessWebsite#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessWebsite" class="control-label col-xs-2">Payment Terms:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="PaymentTerms" disabled="yes"></div>
+							</div>
+							<br /><br />
+							<div class="panel-heading"><h2>Customer Physical Address</h2></div>
+							<div class="form-group">
+								<label for="BusinessAddress" class="control-label col-xs-2">Physical Address:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="BusinessAddress" value="#Session.getBusiness.PhysicalAddress#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessCity" class="control-label col-xs-2">Physical City:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="BusinessCity" value="#Session.getBusiness.PhysicalCity#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessState" class="control-label col-xs-2">Physical State:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="BusinessState" value="#Session.getBusiness.PhysicalState#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessZipCode" class="control-label col-xs-2">Physical ZipCode:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" validate="zipcode" size="10" class="form-control form-control-inline" name="BusinessZipCode" value="#Session.getBusiness.PhysicalZipCode#" disabled="yes"></div>
+							</div>
+							<br /><br />
+							<div class="panel-heading"><h2>Customer Mailing Address</h2></div>
+							<div class="form-group">
+								<label for="BusinessAddress" class="control-label col-xs-2">Mailing Address:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="MailingAddress" value="#Session.getBusiness.MailingAddress#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessCity" class="control-label col-xs-2">Mailing City:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="MailingCity" value="#Session.getBusiness.MailingCity#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessState" class="control-label col-xs-2">Mailing State:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="MailingState" value="#Session.getBusiness.MailingState#" disabled="yes"></div>
+							</div>
+							<div class="form-group">
+								<label for="BusinessZipCode" class="control-label col-xs-2">Mailing ZipCode:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" validate="zipcode" size="10" class="form-control form-control-inline" name="MailingZipCode" value="#Session.getBusiness.MailingZipCode#" disabled="yes"></div>
+							</div>
+							<div class="panel-heading"><h2>Membership Information</h2></div>
+							<div class="form-group">
+								<label for="StudentADM" class="control-label col-xs-2">Current ADM:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="StudentADM" value="#Session.getBusiness.Student_ADM#" required="yes"></div>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<div class="pull-right"><cfinput type="Submit" name="DeleteCustomer" class="btn btn-primary" value="Update Client ADM"></div>
+						</div>
+					</cfform>
+				</cfcase>
 				<cfcase value="Delete">
 					<div class="panel-heading"><h1>Deactivate Customer</h1></div>
 					<cfform action="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers.updatecustomer&PerformAction=#URL.PerformAction#" method="post" id="UpdateExistingCustomer" class="form-horizontal">
@@ -91,6 +180,11 @@ http://www.apache.org/licenses/LICENSE-2.0
 							<div class="form-group">
 								<label for="BusinessZipCode" class="control-label col-xs-2">Mailing ZipCode:&nbsp;</label>
 								<div class="col-xs-10"><cfinput type="text" validate="zipcode" size="10" class="form-control form-control-inline" name="MailingZipCode" value="#Session.getBusiness.MailingZipCode#" disabled="yes"></div>
+							</div>
+							<div class="panel-heading"><h2>Membership Information</h2></div>
+							<div class="form-group">
+								<label for="StudentADM" class="control-label col-xs-2">Current ADM:&nbsp;</label>
+								<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="StudentADM" required="no"></div>
 							</div>
 						</div>
 						<div class="panel-footer">
@@ -210,6 +304,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 									<div class="col-xs-10"><cfinput type="text" validate="zipcode" size="10" class="form-control form-control-inline" name="MailingZipCode" value="#Session.getBusiness.MailingZipCode#" required="no"></div>
 								</div>
 								<br /><br />
+								<div class="panel-heading"><h2>Membership Information</h2></div>
+								<div class="form-group">
+									<label for="StudentADM" class="control-label col-xs-2">Current ADM:&nbsp;</label>
+									<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="StudentADM" required="no" value="#Session.getBusiness.Student_ADM#"></div>
+								</div>
+								<br /><br />
 								<div class="panel-heading"><h2>Customer History</h2></div>
 								<div class="form-group">
 									<label for="DateCreated" class="control-label col-xs-2">Date Created:&nbsp;</label>
@@ -321,6 +421,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 								<div class="form-group">
 									<label for="BusinessZipCode" class="control-label col-xs-2">Mailing ZipCode:&nbsp;</label>
 									<div class="col-xs-10"><cfinput type="text" validate="zipcode" size="10" class="form-control form-control-inline" name="MailingZipCode" value="#Session.getBusiness.MailingZipCode#" required="no"></div>
+								</div>
+								<br /><br />
+								<div class="panel-heading"><h2>Membership Information</h2></div>
+								<div class="form-group">
+									<label for="StudentADM" class="control-label col-xs-2">Current ADM:&nbsp;</label>
+									<div class="col-xs-10"><cfinput type="text" size="10" class="form-control form-control-inline" name="StudentADM" required="no" value="#Session.getBusiness.Student_ADM#"></div>
 								</div>
 								<br /><br />
 								<div class="panel-heading"><h2>Customer History</h2></div>
