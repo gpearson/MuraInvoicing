@@ -42,12 +42,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="well">Please complete the following information to add a new position to this portal</div>
 					<div class="panel-heading"><h2>Position Information</h2></div>
 					<div class="form-group">
-						<label for="PositionName" class="control-label col-xs-2">Position Name:&nbsp;</label>
-						<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="PositionName" required="yes"></div>
+						<label for="PositionName" class="control-label col-sm-2">Position Name:&nbsp;</label>
+						<div class="col-sm-9"><cfinput type="text" size="20" class="form-control" name="PositionName" required="yes"></div>
 					</div>
 					<div class="form-group">
-						<label for="PositionActive" class="control-label col-xs-2">Position Active:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="PositionActive" class="control-label col-sm-2">Position Active:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfselect name="PositionActive" Required="Yes" Multiple="No" query="YesNoQuery" value="ID" Display="OptionName"  queryposition="below">
 								<option value="----">Select Active Status</option>
 							</cfselect>
@@ -57,7 +57,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="form-group">&nbsp;</div>
 				</div>
 				<div class="panel-footer">
-					<div class="pull-right"><cfinput type="Submit" name="AddClient" class="btn btn-primary" value="Add New Position Title"></div>
+					<cfinput type="Submit" name="AddClient" class="btn btn-primary pull-right" value="Add New Position Title"><br /><br />
 				</div>
 			</cfform>
 		<cfelseif isDefined("URL.PerformAction")>

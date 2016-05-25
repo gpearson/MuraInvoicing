@@ -11,9 +11,14 @@ http://www.apache.org/licenses/LICENSE-2.0
 </cfsilent>
 
 <cfoutput>
+	<script>
+		$.jgrid.defaults.width = 800;
+		$.jgrid.defaults.responsive = true;
+		$.jgrid.defaults.styleUI = 'Bootstrap';
+	</script>
 	<div class="panel panel-default">
-		<div class="panel-heading"><h1>Customer Positions Held Screen</h1></div>
-		<div class="panbel-body">
+		<div class="panel-heading"><h1>Available Position/Titles Screen</h1></div>
+		<div class="panel-body">
 			<cfif isDefined("URL.UserAction")>
 				<cfswitch expression="#URL.UserAction#">
 					<cfcase value="AddedPosition">
@@ -44,41 +49,81 @@ http://www.apache.org/licenses/LICENSE-2.0
 					</cfcase>
 				</cfswitch>
 			</cfif>
-			<cfif not isDefined("URL.RecNo")>
-				<table class="table table-striped table-bordered" cellspacing="0" width="100%">
-					<thead>
-						<tr>
-							<th>Position Title</th>
-							<th>Active</th>
-							<th width="100">Actions</th>
-						</tr>
-					</thead>
-					<cfif Session.getPositionTitles.RecordCount>
-						<tfoot>
-							<tr>
-								<td colspan="6"><div class="text-center">To add additional position titles to this system, <A href="#buildURL('admin:customers.addpositions')#">Click Here</A></div></td>
-							</tr>
-						</tfoot>
-						<tbody>
-							<cfloop query="Session.getPositionTitles">
-								<tr bgcolor="###iif(currentrow MOD 2,DE('ffffff'),DE('efefef'))#">
-									<td>#Session.getPositionTitles.PositionTitle#</td>
-									<td><cfswitch expression="#Session.getPositionTitles.Active#"><cfcase value="1">Yes</cfcase><cfdefaultcase>No</cfdefaultcase></cfswitch></td>
-									<td><a href="#buildURL('admin:customers.updatepositions')#&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-warning btn-small">U</a></td>
-								</tr>
-							</cfloop>
-						</tbody>
-					<cfelse>
-						<tbody>
-							<tr>
-								<td colspan="3"><div class="text-center">No Position Titles have been added to this site.</div></td>
-							</tr>
-						</tbody>
-					</cfif>
-				</table>
-			<cfelseif isDefined("URL.RecNo")>
+			<table id="jqGrid"></table>
+			<div id="jqGridPager"></div>
+			<div id="dialog" title="Feature not supported" style="display:none">
+				<p>That feature is not supported.</p>
+			</div>
+			<script type="text/javascript">
+				$(document).ready(function () {
+					var selectedRow = 0;
+					$("##jqGrid").jqGrid({
+						url: "/plugins/MuraInvoicing/admin/controllers/settings.cfc?method=getAllPositionTitles",
+						// we set the changes to be made at client side using predefined word clientArray
+						datatype: "json",
+						colNames: ["Rec No","Position Name","Created","Updated","Update By","Active"],
+						colModel: [
+							{ label: 'Rec ##', name: 'TContent_ID', width: 75, key: true },
+							{ label: 'Position Title', name: 'PositionTitle' },
+							{ label: 'Created', name: 'dateCreated', width: 100, editable: true },
+							{ label: 'Updated', name: 'lastUpdated', width: 75, editable: true },
+							{ label: 'Update By', name: 'lastUpdateby', width: 50, editable: true },
+							{ label: 'Active', name: 'Active', width: 50 }
+						],
+						sortname: 'TContent_ID',
+						sortorder : 'asc',
+						viewrecords: true,
+						height: 500,
+						rowNum: 30,
+						pgText: " of ",
+						pager: "##jqGridPager",
+						jsonReader: {
+							root: "ROWS",
+							page: "PAGE",
+							total: "TOTAL",
+							records: "RECORDS",
+							cell: "",
+							id: "0"
+						},
+						onSelectRow: function(id){
+							//We verify a valid new row selection
+							if(id && id!==selectedRow) {
+								//If a previous row was selected, but the values were not saved, we restore it to the original data.
+								$('##jqGrid').restoreRow(selectedRow);
+								selectedRow=id;
+							}
+						}
+					});
+					$('##jqGrid').navGrid('##jqGridPager', {edit: false, add: false, del:false, search:false});
+					$('##jqGrid').navButtonAdd('##jqGridPager',
+						{
+							caption: "",
+							buttonicon: "glyphicon-plus",
+							onClickButton: function() {
+								var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:settings.addpositions";
+								window.open(urlToGo,"_self");
+							},
+							position: "last"
+						}
+					)
+					$('##jqGrid').navButtonAdd('##jqGridPager',
+						{
+							caption: "",
+							buttonicon: "glyphicon-pencil",
+							onClickButton: function(id) {
+								if (selectedRow == 0) {
+									alert("Please Select a Row to edit a Business in the database");
+								} else {
+									var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:settings.updatepositions&RecNo=" + selectedRow;
+									window.open(urlToGo,"_self");
+								}
 
-			</cfif>
+							},
+							position: "last"
+						}
+					)
+				});
+			</script>
 		</div>
 		<div class="panbel-footer">&nbsp;</div>
 	</div>

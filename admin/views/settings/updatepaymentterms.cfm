@@ -43,12 +43,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="well">Please complete the following information to update payment terms</div>
 					<div class="panel-heading"><h2>Position Information</h2></div>
 					<div class="form-group">
-						<label for="PaymentTermName" class="control-label col-xs-2">Payment Term Name:&nbsp;</label>
-						<div class="col-xs-10"><cfinput type="text" size="20" class="form-control" name="PaymentTermName" value="#Session.getPaymentTerms.PaymentTerms#" required="yes"></div>
+						<label for="PaymentTermName" class="control-label col-sm-2">Term Name:&nbsp;</label>
+						<div class="col-sm-9"><cfinput type="text" size="20" class="form-control" name="PaymentTermName" value="#Session.getPaymentTerms.PaymentTerms#" required="yes"></div>
 					</div>
 					<div class="form-group">
-						<label for="PaymentTermActive" class="control-label col-xs-2">Payment Term Active:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="PaymentTermActive" class="control-label col-sm-2">Term Active:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfselect name="PaymentTermActive" Required="Yes" Multiple="No" query="YesNoQuery" value="ID" selected="#Session.getPaymentTerms.Active#" Display="OptionName"  queryposition="below">
 								<option value="----">Select Active Status</option>
 							</cfselect>
@@ -57,7 +57,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="form-group">&nbsp;</div>
 				</div>
 				<div class="panel-footer">
-					<div class="pull-right"><cfinput type="Submit" name="AddClient" class="btn btn-primary" value="Update Payment Terms"></div>
+					<cfinput type="Submit" name="AddClient" class="btn btn-primary pull-right" value="Update Payment Terms"><br /><br />
 				</div>
 			</cfform>
 		<cfelseif isDefined("URL.PerformAction")>
