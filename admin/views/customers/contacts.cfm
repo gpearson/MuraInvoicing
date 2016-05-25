@@ -19,11 +19,11 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<cfcase value="UpdatedContact">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
+								<div class="alert alert-success">
 									You have successfully updated a contact for this client in the database
 								</div>
 							<cfelse>
-								<div class="well well-lg">
+								<div class="alert alert-danger">
 									An Error has occurred and the customer record was not added to the database.
 								</div>
 							</cfif>
@@ -32,51 +32,25 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<cfcase value="DeletedContact">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
+								<div class="alert alert-success">
 									You have successfully deleted a contact from this client in the database
 								</div>
 							<cfelse>
-								<div class="well well-lg">
+								<div class="alert alert-danger">
 									An Error has occurred and the customer record was not added to the database.
 								</div>
 							</cfif>
 						</cfif>
 					</cfcase>
-					<cfcase value="AddedCustomer">
+					<cfcase value="AddedContact">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
+								<div class="alert alert-success">
 									You have successfully added a new customer record in the database
 								</div>
 							<cfelse>
-								<div class="well well-lg">
+								<div class="alert alert-danger">
 									An Error has occurred and the customer record was not added to the database.
-								</div>
-							</cfif>
-						</cfif>
-					</cfcase>
-					<cfcase value="UpdatedCustomer">
-						<cfif isDefined("URL.Successful")>
-							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
-									You have successfully updated the customer record in the database
-								</div>
-							<cfelse>
-								<div class="well well-lg">
-									An Error has occurred and the customer record was not updated in the database.
-								</div>
-							</cfif>
-						</cfif>
-					</cfcase>
-					<cfcase value="DeletedCustomer">
-						<cfif isDefined("URL.Successful")>
-							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
-									You have successfully deleted the customer record in the database
-								</div>
-							<cfelse>
-								<div class="well well-lg">
-									An Error has occurred and the customer record was not deleted from the database.
 								</div>
 							</cfif>
 						</cfif>
@@ -125,11 +99,11 @@ http://www.apache.org/licenses/LICENSE-2.0
 				<table class="table table-striped table-bordered" cellspacing="0" width="100%">
 					<thead>
 						<tr>
-							<th>Contact Name</th>
-							<th>Contact Email</th>
-							<th>Contact Phone</th>
-							<th>Contact Extension</th>
-							<th>Contact Position</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Extension</th>
+							<th>Position</th>
 							<th width="100">Actions</th>
 						</tr>
 					</thead>
