@@ -20,20 +20,20 @@ http://www.apache.org/licenses/LICENSE-2.0
 				<div class="panel-body">
 					<div class="panel-heading"><h2>Client Information</h2></div>
 					<div class="form-group">
-						<label for="BusinessName" class="control-label col-xs-2">client Name:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="BusinessName" class="control-label col-sm-2">client Name:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="BusinessName" value="#Session.getSelectedClient.BusinessName#" disabled="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="PhysicalAddress" class="control-label col-xs-2">Physical Address:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="PhysicalAddress" class="control-label col-sm-2">Physical Address:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="PhysicalAddress" value="#Session.getSelectedClient.PhysicalAddress#" disabled="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="PhysicalCityStateZip" class="control-label col-xs-2">Physical City State Zip:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="PhysicalCityStateZip" class="control-label col-sm-2">Physical City State Zip:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="PhysicalCityStateZip" value="#Session.getSelectedClient.PhysicalCity#, #Session.getSelectedClient.PhysicalState# #Session.getSelectedClient.PhysicalZipCode#" disabled="yes">
 						</div>
 					</div>
@@ -41,38 +41,38 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="form-group">&nbsp;</div>
 					<div class="panel-heading"><h2>Contact Information</h2></div>
 					<div class="form-group">
-						<label for="ContactFirstName" class="control-label col-xs-2">Contact First Name:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactFirstName" class="control-label col-sm-2">Contact First Name:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactFirstName" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactLastName" class="control-label col-xs-2">Contact Last Name:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactLastName" class="control-label col-sm-2">Contact Last Name:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactLastName" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactEmail" class="control-label col-xs-2">Contact Email Address:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactEmail" class="control-label col-sm-2">Contact Email Address:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactEmail" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactPhone" class="control-label col-xs-2">Contact Phone Number:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactPhone" class="control-label col-sm-2">Contact Phone Number:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactPhone" required="yes" mask="999-999-9999">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactPhoneExtension" class="control-label col-xs-2">Contact Extension:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactPhoneExtension" class="control-label col-sm-2">Contact Extension:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactPhoneExtension" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactPosition" class="control-label col-xs-2">Contact Position Title:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactPosition" class="control-label col-sm-2">Contact Position Title:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfselect name="ContactPosition" Required="Yes" Multiple="No" query="Session.getPositions" value="TContent_ID" Display="PositionTitle"  queryposition="below">
 								<option value="----">Select Contact's Position</option>
 							</cfselect>
@@ -82,7 +82,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="form-group">&nbsp;</div>
 				</div>
 				<div class="panel-footer">
-					<div class="pull-right"><cfinput type="Submit" name="AddClient" class="btn btn-primary" value="Add New Client Contact"></div>
+					<cfinput type="Submit" name="AddClient" class="btn btn-primary pull-right" value="Add New Client Contact"><br /><br />
 				</div>
 			</cfform>
 		<cfelseif isDefined("URL.PerformAction")>
@@ -99,20 +99,20 @@ http://www.apache.org/licenses/LICENSE-2.0
 					</cfif>
 					<div class="panel-heading"><h2>Client Information</h2></div>
 					<div class="form-group">
-						<label for="BusinessName" class="control-label col-xs-2">client Name:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="BusinessName" class="control-label col-sm-2">client Name:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="BusinessName" value="#Session.getSelectedClient.BusinessName#" disabled="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="PhysicalAddress" class="control-label col-xs-2">Physical Address:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="PhysicalAddress" class="control-label col-sm-2">Physical Address:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="PhysicalAddress" value="#Session.getSelectedClient.PhysicalAddress#" disabled="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="PhysicalCityStateZip" class="control-label col-xs-2">Physical City State Zip:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="PhysicalCityStateZip" class="control-label col-sm-2">Physical City State Zip:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="PhysicalCityStateZip" value="#Session.getSelectedClient.PhysicalCity#, #Session.getSelectedClient.PhysicalState# #Session.getSelectedClient.PhysicalZipCode#" disabled="yes">
 						</div>
 					</div>
@@ -120,38 +120,38 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="form-group">&nbsp;</div>
 					<div class="panel-heading"><h2>Contact Information</h2></div>
 					<div class="form-group">
-						<label for="ContactFirstName" class="control-label col-xs-2">Contact First Name:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactFirstName" class="control-label col-sm-2">Contact First Name:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactFirstName" value="#Session.FormData.ContactFirstName#" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactLastName" class="control-label col-xs-2">Contact Last Name:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactLastName" class="control-label col-sm-2">Contact Last Name:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactLastName" value="#Session.FormData.ContactLastName#" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactEmail" class="control-label col-xs-2">Contact Email Address:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactEmail" class="control-label col-sm-2">Contact Email Address:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactEmail" value="#Session.FormData.ContactEmail#" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactPhone" class="control-label col-xs-2">Contact Phone Number:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactPhone" class="control-label col-sm-2">Contact Phone Number:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactPhone" value="#Session.FormData.ContactPhone#" required="yes" mask="999-999-9999">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactPhoneExtension" class="control-label col-xs-2">Contact Extension:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactPhoneExtension" class="control-label col-sm-2">Contact Extension:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfinput type="text" size="20" class="form-control" name="ContactPhoneExtension" value="#Session.FormData.ContactPhoneExtension#" required="yes">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="ContactPosition" class="control-label col-xs-2">Contact Position Title:&nbsp;</label>
-						<div class="col-xs-10">
+						<label for="ContactPosition" class="control-label col-sm-2">Contact Position Title:&nbsp;</label>
+						<div class="col-sm-9">
 							<cfselect name="ContactPosition" Required="Yes" Multiple="No" query="Session.getPositions" selected="#Session.FormData.ContactPosition#" value="TContent_ID" Display="PositionTitle"  queryposition="below">
 								<option value="----">Select Contact's Position</option>
 							</cfselect>
@@ -161,7 +161,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<div class="form-group">&nbsp;</div>
 				</div>
 				<div class="panel-footer">
-					<div class="pull-right"><cfinput type="Submit" name="AddClient" class="btn btn-primary" value="Add New Client Contact"></div>
+					<cfinput type="Submit" name="AddClient" class="btn btn-primary pull-right" value="Add New Client Contact"><br /><br />
 				</div>
 			</cfform>
 		</cfif>

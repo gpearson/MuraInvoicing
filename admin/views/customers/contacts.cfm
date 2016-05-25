@@ -13,7 +13,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 <cfoutput>
 	<div class="panel panel-default">
 		<div class="panel-heading"><h1>Customer Contact Information Screen</h1></div>
-		<div class="panbel-body">
+		<div class="panel-body">
 			<cfif isDefined("URL.UserAction")>
 				<cfswitch expression="#URL.UserAction#">
 					<cfcase value="UpdatedContact">
@@ -83,7 +83,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 					</cfcase>
 				</cfswitch>
 			</cfif>
-			<cfif not isDefined("URL.RecNo")>
+			<cfif isDefined("URL.RecNo")>
 				<table class="table table-striped table-bordered" cellspacing="0" width="100%">
 					<thead>
 						<tr>
@@ -93,7 +93,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 							<th>State</th>
 							<th>Zip Code</th>
 							<th>Active</th>
-							<th width="100">Actions</th>
 						</tr>
 					</thead>
 					<cfif Session.getBusiness.RecordCount>
@@ -111,47 +110,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 									<td>#Session.getBusiness.PhysicalState#</td>
 									<td>#Session.getBusiness.PhysicalZipCode#</td>
 									<td><cfswitch expression="#Session.getBusiness.Active#"><cfcase value="1">Yes</cfcase><cfdefaultcase>No</cfdefaultcase></cfswitch></td>
-									<td><a href="#buildURL('admin:customers.contacts')#&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-success btn-small">L</a></td>
-								</tr>
-							</cfloop>
-						</tbody>
-					<cfelse>
-						<tbody>
-							<tr>
-								<td colspan="7"><div class="text-center">No Clients have been added to this site.</div></td>
-							</tr>
-						</tbody>
-					</cfif>
-				</table>
-			<cfelseif isDefined("URL.RecNo")>
-				<table class="table table-striped table-bordered" cellspacing="0" width="100%">
-					<thead>
-						<tr>
-							<th>Business Name</th>
-							<th>Address</th>
-							<th>City</th>
-							<th>State</th>
-							<th>Zip Code</th>
-							<th>Active</th>
-							<th width="100">Actions</th>
-						</tr>
-					</thead>
-					<cfif Session.getBusiness.RecordCount>
-						<tfoot>
-							<tr>
-								<td colspan="7"><div class="text-center"></div></td>
-							</tr>
-						</tfoot>
-						<tbody>
-							<cfloop query="Session.getBusiness">
-								<tr bgcolor="###iif(currentrow MOD 2,DE('ffffff'),DE('efefef'))#">
-									<td>#Session.getBusiness.BusinessName#</td>
-									<td>#Session.getBusiness.PhysicalAddress#</td>
-									<td>#Session.getBusiness.PhysicalCity#</td>
-									<td>#Session.getBusiness.PhysicalState#</td>
-									<td>#Session.getBusiness.PhysicalZipCode#</td>
-									<td><cfswitch expression="#Session.getBusiness.Active#"><cfcase value="1">Yes</cfcase><cfdefaultcase>No</cfdefaultcase></cfswitch></td>
-									<td><a href="#buildURL('admin:customers.contacts')#&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-success btn-small">L</a></td>
 								</tr>
 							</cfloop>
 						</tbody>

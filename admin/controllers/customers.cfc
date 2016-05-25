@@ -17,6 +17,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 			Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#">
 			Order by BusinessName
 		</cfquery>
+
 	</cffunction>
 
 	<cffunction name="getAllCustomers" access="remote" returnformat="json">

@@ -71,8 +71,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 				$(document).ready(function () {
 					var selectedRow = 0;
 					$("##jqGrid").jqGrid({
-						url: "/plugins/MuraInvoicing/admin/controllers/customers.cfc?method=getAllCustomers&Datasource=#rc.$.globalConfig('datasource')#&DataUsername=#rc.$.globalConfig('dbusername')#&DataPassword=#rc.$.globalConfig('dbpassword')#&SiteID=#rc.$.siteConfig('siteID')#",
-						editurl: "/plugins/MuraInvoicing/admin/controllers/customers.cfc?method=updateCustomer&Datasource=#rc.$.globalConfig('datasource')#&DataUsername=#rc.$.globalConfig('dbusername')#&DataPassword=#rc.$.globalConfig('dbpassword')#&SiteID=#rc.$.siteConfig('siteID')#",
+						url: "/plugins/MuraInvoicing/admin/controllers/customers.cfc?method=getAllCustomers",
 						// we set the changes to be made at client side using predefined word clientArray
 						datatype: "json",
 						colNames: ["Rec No","Business Name","Address","City","State","Zip Code","Active"],
@@ -126,8 +125,13 @@ http://www.apache.org/licenses/LICENSE-2.0
 							caption: "",
 							buttonicon: "glyphicon-pencil",
 							onClickButton: function(id) {
-								var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.updatecustomer&PerformAction=Edit&RecNo=" + selectedRow;
-								window.open(urlToGo,"_self");
+								if (selectedRow == 0) {
+									alert("Please Select a Row to edit a Business in the database");
+								} else {
+									var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.updatecustomer&PerformAction=Edit&RecNo=" + selectedRow;
+									window.open(urlToGo,"_self");
+								}
+
 							},
 							position: "last"
 						}
@@ -137,8 +141,28 @@ http://www.apache.org/licenses/LICENSE-2.0
 							caption: "",
 							buttonicon: "glyphicon-remove",
 							onClickButton: function(id) {
-								var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.updatecustomer&PerformAction=Delete&RecNo=" + selectedRow;
-								window.open(urlToGo,"_self");
+								if (selectedRow == 0) {
+									alert("Please Select a Row to deactivate a Business in the database");
+								} else {
+									var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.updatecustomer&PerformAction=Delete&RecNo=" + selectedRow;
+									window.open(urlToGo,"_self");
+								}
+
+							},
+							position: "last"
+						}
+					)
+					$('##jqGrid').navButtonAdd('##jqGridPager',
+						{
+							caption: "",
+							buttonicon: "glyphicon-user",
+							onClickButton: function(id) {
+								if (selectedRow == 0) {
+									alert("Please Select a Row to manage Business Contacts");
+								} else {
+									var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.contacts&RecNo=" + selectedRow;
+									window.open(urlToGo,"_self");
+								}
 							},
 							position: "last"
 						}
