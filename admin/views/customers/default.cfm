@@ -11,33 +11,25 @@ http://www.apache.org/licenses/LICENSE-2.0
 </cfsilent>
 
 <cfoutput>
+	<script>
+		$.jgrid.defaults.width = 800;
+		$.jgrid.defaults.responsive = true;
+		$.jgrid.defaults.styleUI = 'Bootstrap';
+	</script>
 	<div class="panel panel-default">
-		<div class="panel-heading"><h1>Customer Administration Screen</h1></div>
-		<div class="panbel-body">
+		<div class="panel-heading"><h1>Customer Menu</h1></div>
+		<div class="panel-body">
 			<cfif isDefined("URL.UserAction")>
 				<cfswitch expression="#URL.UserAction#">
-					<cfcase value="ADMUpdated">
-						<cfif isDefined("URL.Successful")>
-							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
-									You have successfully updated the Client's Student ADM numbers in the database
-								</div>
-							<cfelse>
-								<div class="well well-lg">
-									An Error has occurred and the customer record was not added to the database.
-								</div>
-							</cfif>
-						</cfif>
-					</cfcase>
 					<cfcase value="AddedCustomer">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
-									You have successfully added a new customer record in the database
+								<div class="alert alert-success">
+									You have successfully added a new customer record to the database.
 								</div>
 							<cfelse>
-								<div class="well well-lg">
-									An Error has occurred and the customer record was not added to the database.
+								<div class="alert alert-danger">
+									An error has occurred and the customer record was not added to the database.
 								</div>
 							</cfif>
 						</cfif>
@@ -45,12 +37,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<cfcase value="UpdatedCustomer">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
-									You have successfully updated the customer record in the database
+								<div class="alert alert-success">
+									You have successfully updated the selected customer record in the database.
 								</div>
 							<cfelse>
-								<div class="well well-lg">
-									An Error has occurred and the customer record was not updated in the database.
+								<div class="alert alert-danger">
+									An error has occurred and the customer record was not updated in the database.
 								</div>
 							</cfif>
 						</cfif>
@@ -58,58 +50,102 @@ http://www.apache.org/licenses/LICENSE-2.0
 					<cfcase value="DeletedCustomer">
 						<cfif isDefined("URL.Successful")>
 							<cfif URL.Successful EQ "true">
-								<div class="well well-lg">
-									You have successfully deleted the customer record in the database
+								<div class="alert alert-success">
+									You have successfully deactivated the selected customer record in the database.
 								</div>
 							<cfelse>
-								<div class="well well-lg">
-									An Error has occurred and the customer record was not deleted from the database.
+								<div class="alert alert-danger">
+									An error has occurred and the customer record was not deactivated in the database.
 								</div>
 							</cfif>
 						</cfif>
 					</cfcase>
 				</cfswitch>
 			</cfif>
-			<table class="table table-striped table-bordered" cellspacing="0" width="100%">
-				<thead>
-					<tr>
-						<th>Business Name</th>
-						<th>Address</th>
-						<th>City</th>
-						<th>State</th>
-						<th>Zip Code</th>
-						<th>Active</th>
-						<th width="100">Actions</th>
-					</tr>
-				</thead>
-				<cfif Session.getBusiness.RecordCount>
-					<tfoot>
-						<tr>
-							<td colspan="7"><div class="text-center"></div></td>
-						</tr>
-					</tfoot>
-					<tbody>
-						<cfloop query="Session.getBusiness">
-							<tr bgcolor="###iif(currentrow MOD 2,DE('ffffff'),DE('efefef'))#">
-								<td>#Session.getBusiness.BusinessName#</td>
-								<td>#Session.getBusiness.PhysicalAddress#</td>
-								<td>#Session.getBusiness.PhysicalCity#</td>
-								<td>#Session.getBusiness.PhysicalState#</td>
-								<td>#Session.getBusiness.PhysicalZipCode#</td>
-								<td><cfswitch expression="#Session.getBusiness.Active#"><cfcase value="1">Yes</cfcase><cfdefaultcase>No</cfdefaultcase></cfswitch></td>
-								<td><a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=Edit&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-warning btn-small">U</a><cfif Session.getBusiness.Active EQ 1>&nbsp;<a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=Delete&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-danger btn-small">D</a></cfif><a href="#buildURL('admin:customers.updatecustomer')#&PerformAction=UpdateADM&RecNo=#Session.getBusiness.TContent_ID#" class="btn btn-warning btn-small">ADM</a></td>
-							</tr>
-						</cfloop>
-					</tbody>
-				<cfelse>
-					<tbody>
-						<tr>
-							<td colspan="7"><div class="text-center">No Clients have been added to this site.</div></td>
-						</tr>
-					</tbody>
-				</cfif>
-			</table>
+			<table id="jqGrid"></table>
+			<div id="jqGridPager"></div>
+			<div id="dialog" title="Feature not supported" style="display:none">
+				<p>That feature is not supported.</p>
+			</div>
+			<script type="text/javascript">
+				$(document).ready(function () {
+					var selectedRow = 0;
+					$("##jqGrid").jqGrid({
+						url: "/plugins/MuraInvoicing/admin/controllers/customers.cfc?method=getAllCustomers&Datasource=#rc.$.globalConfig('datasource')#&DataUsername=#rc.$.globalConfig('dbusername')#&DataPassword=#rc.$.globalConfig('dbpassword')#&SiteID=#rc.$.siteConfig('siteID')#",
+						editurl: "/plugins/MuraInvoicing/admin/controllers/customers.cfc?method=updateCustomer&Datasource=#rc.$.globalConfig('datasource')#&DataUsername=#rc.$.globalConfig('dbusername')#&DataPassword=#rc.$.globalConfig('dbpassword')#&SiteID=#rc.$.siteConfig('siteID')#",
+						// we set the changes to be made at client side using predefined word clientArray
+						datatype: "json",
+						colNames: ["Rec No","Business Name","Address","City","State","Zip Code","Active"],
+						colModel: [
+							{ label: 'Rec ##', name: 'TContent_ID', width: 75, key: true, editable: false },
+							{ label: 'Business Name', name: 'BusinessName', editable: true },
+							{ label: 'Physical Address', name: 'PhysicalAddress', width: 100, editable: true },
+							{ label: 'City', name: 'PhysicalCity', width: 75, editable: true },
+							{ label: 'State', name: 'PhysicalState', width: 50, editable: true },
+							{ label: 'Zip Code', name: 'PhysicalZipCode', width: 100, editable: true },
+							{ label: 'Active', name: 'Active', width: 50, editable: true, edittype: "select", editoptions: { value: "1:Yes;0:No"}}
+						],
+						sortname: 'TContent_ID',
+						sortorder : 'asc',
+						viewrecords: true,
+						height: 500,
+						rowNum: 30,
+						pgText: " of ",
+						pager: "##jqGridPager",
+						jsonReader: {
+							root: "ROWS",
+							page: "PAGE",
+							total: "TOTAL",
+							records: "RECORDS",
+							cell: "",
+							id: "0"
+						},
+						onSelectRow: function(id){
+							//We verify a valid new row selection
+							if(id && id!==selectedRow) {
+								//If a previous row was selected, but the values were not saved, we restore it to the original data.
+								$('##jqGrid').restoreRow(selectedRow);
+								selectedRow=id;
+							}
+						}
+					});
+					$('##jqGrid').navGrid('##jqGridPager', {edit: false, add: false, del:false, search:false});
+					$('##jqGrid').navButtonAdd('##jqGridPager',
+						{
+							caption: "",
+							buttonicon: "glyphicon-plus",
+							onClickButton: function() {
+								var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.newcustomer";
+								window.open(urlToGo,"_self");
+							},
+							position: "last"
+						}
+					)
+					$('##jqGrid').navButtonAdd('##jqGridPager',
+						{
+							caption: "",
+							buttonicon: "glyphicon-pencil",
+							onClickButton: function(id) {
+								var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.updatecustomer&PerformAction=Edit&RecNo=" + selectedRow;
+								window.open(urlToGo,"_self");
+							},
+							position: "last"
+						}
+					)
+					$('##jqGrid').navButtonAdd('##jqGridPager',
+						{
+							caption: "",
+							buttonicon: "glyphicon-remove",
+							onClickButton: function(id) {
+								var urlToGo = "http://" + window.location.hostname + "/plugins/MuraInvoicing/index.cfm?MuraInvoicingaction=admin:customers.updatecustomer&PerformAction=Delete&RecNo=" + selectedRow;
+								window.open(urlToGo,"_self");
+							},
+							position: "last"
+						}
+					)
+
+				});
+			</script>
 		</div>
-		<div class="panbel-footer">&nbsp;</div>
 	</div>
 </cfoutput>

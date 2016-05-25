@@ -19,6 +19,57 @@ http://www.apache.org/licenses/LICENSE-2.0
 		</cfquery>
 	</cffunction>
 
+	<cffunction name="getAllCustomers" access="remote" returnformat="json">
+		<cfargument name="page" required="no" default="1" hint="Page user is on">
+		<cfargument name="rows" required="no" default="10" hint="Number of Rows to display per page">
+		<cfargument name="sidx" required="no" default="" hint="Sort Column">
+		<cfargument name="sord" required="no" default="ASC" hint="Sort Order">
+
+		<cfset var arrCustomers = ArrayNew(1)>
+		<cfquery name="getBusiness" dbtype="Query">
+			Select TContent_ID, BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, Active, dateCreated, lastUpdated, lastUpdateBy, Site_ID, Student_ADM
+			From Session.getBusiness
+			<cfif Arguments.sidx NEQ "">
+				Order By #Arguments.sidx# #Arguments.sord#
+			<cfelse>
+				Order by BusinessName #Arguments.sord#
+			</cfif>
+		</cfquery>
+
+		<!--- Calculate the Start Position for the loop query. So, if you are on 1st page and want to display 4 rows per page, for first page you start at: (1-1)*4+1 = 1.
+				If you go to page 2, you start at (2-)1*4+1 = 5 --->
+		<cfset start = ((arguments.page-1)*arguments.rows)+1>
+
+		<!--- Calculate the end row for the query. So on the first page you go from row 1 to row 4. --->
+		<cfset end = (start-1) + arguments.rows>
+
+		<!--- When building the array --->
+		<cfset i = 1>
+
+		<cfloop query="getBusiness" startrow="#start#" endrow="#end#">
+			<!--- Array that will be passed back needed by jqGrid JSON implementation --->
+			<cfif #Active# EQ 1>
+				<cfset strActive = "Yes">
+			<cfelse>
+				<cfset strActive = "No">
+			</cfif>
+			<cfset arrCustomers[i] = [#TContent_ID#,#BusinessName#,#PhysicalAddress#,#PhysicalCity#,#PhysicalState#,#PhysicalZipCode#,#strActive#,#dateCreated#,#lastUpdated#,#lastUpdateBy#,#Site_ID#,#Student_ADM#]>
+			<cfset i = i + 1>
+		</cfloop>
+
+		<!--- Calculate the Total Number of Pages for your records. --->
+		<cfset totalPages = Ceiling(getBusiness.recordcount/arguments.rows)>
+
+		<!--- The JSON return.
+			Total - Total Number of Pages we will have calculated above
+			Page - Current page user is on
+			Records - Total number of records
+			rows = our data
+		--->
+		<cfset stcReturn = {total=#totalPages#,page=#Arguments.page#,records=#getBusiness.recordcount#,rows=arrCustomers}>
+		<cfreturn stcReturn>
+	</cffunction>
+
 	<cffunction name="GeoCodeAddress" ReturnType="Array" Output="False">
 		<cfargument name="Address" type="String" required="True">
 		<cfargument name="City" type="String" required="True">
@@ -278,6 +329,50 @@ http://www.apache.org/licenses/LICENSE-2.0
 						<cfset #arrayAppend(GeoCodeAddress, Temp)#>
 						<cfreturn GeoCodeAddress>
 					</cfcase>
+					<cfcase value="premise">
+						<!--- Address Example: 29125 Co Rd 22, Elkhart, IN 46517, USA --->
+						<cfscript>
+							GeoCodeResultStreetNumber = GeoCodeResultAddressComponent[1].XmlChildren;
+							GeoCodeResultStreetName = GeoCodeResultAddressComponent[2].XmlChildren;
+							GeoCodeResultCityName = GeoCodeResultAddressComponent[3].XmlChildren;
+							GeoCodeResultTownshipName = GeoCodeResultAddressComponent[4].XmlChildren;
+							GeoCodeResultCountyName = GeoCodeResultAddressComponent[5].XmlChildren;
+							GeoCodeResultStateName = GeoCodeResultAddressComponent[6].XmlChildren;
+							GeoCodeResultCountryName = GeoCodeResultAddressComponent[7].XmlChildren;
+							GeoCodeResultZipCode = GeoCodeResultAddressComponent[8].XmlChildren;
+							GeoCodeAddressLocation = GeoCodeResultGeometryComponent[1].XmlChildren;
+							GeoCodeFormattedAddress = GeoCodeResultFormattedAddress[1].XmlText;
+						</cfscript>
+
+						<cfset Temp.RawInformation = StructNew()>
+						<cfset Temp.RawInformation.XMLDocument = #Variables.XMLDocument#>
+						<cfset Temp.RawInformation.ResponseStatus = #Variables.GeoCodeResponseStatus#>
+						<cfset Temp.RawInformation.GeoCodeResultFormattedAddressType = #Variables.GeoCodeResultFormattedAddressType#>
+						<cfset Temp.RawInformation.GeoCodeResultFormattedAddress = #Variables.GeoCodeResultFormattedAddress#>
+						<cfset Temp.RawInformation.GeoCodeResultAddressComponent = #Variables.GeoCodeResultAddressComponent#>
+						<cfset Temp.RawInformation.GeoCodeResultGeometryComponent = #Variables.GeoCodeResultGeometryComponent#>
+						<cfset Temp.ErrorMessage = #GeoCodeResponseStatus[1].XMLText#>
+						<cfset Temp.AddressStreetNumber = #GeoCodeResultStreetNumber[1].XMLText#>
+						<cfset Temp.AddressStreetNameLong = #GeoCodeResultStreetName[1].XMLText#>
+						<cfset Temp.AddressStreetNameShort = #GeoCodeResultStreetName[2].XMLText#>
+						<cfset Temp.AddressStreetNameType = #GeoCodeResultStreetName[3].XMLText#>
+						<cfset Temp.AddressCityName = #GeoCodeResultCityName[1].XMLText#>
+						<cfset Temp.AddressCountyNameLong = #GeoCodeResultCountyName[1].XMLText#>
+						<cfset Temp.AddressCountyNameShort = #GeoCodeResultCountyName[2].XMLText#>
+						<cfset Temp.AddressStateNameLong = #GeoCodeResultStateName[1].XMLText#>
+						<cfset Temp.AddressStateNameShort = #GeoCodeResultStateName[2].XMLText#>
+						<cfset Temp.AddressCountryNameLong = #GeoCodeResultCountryName[1].XMLText#>
+						<cfset Temp.AddressCountryNameShort = #GeoCodeResultCountryName[2].XMLText#>
+						<cfset Temp.AddressZipCode = #GeoCodeResultZipCode[1].XMLText#>
+						<cfset Temp.AddressLocation = #GeoCodeAddressLocation[1].XMLChildren#>
+						<cfset Temp.AddressLatitude = #Temp.AddressLocation[1].XMLText#>
+						<cfset Temp.AddressLongitude = #Temp.AddressLocation[2].XMLText#>
+						<cfset Temp.AddressTownshipNameLong = #GeoCodeResultTownshipName[1].XMLText#>
+						<cfset Temp.AddressTownshipNameShort = #GeoCodeResultTownshipName[2].XMLText#>
+						<cfset Temp.NeighborhoodNameLong = "">
+						<cfset Temp.NeighborhoodNameShort = "">
+						<cfset #arrayAppend(GeoCodeAddress, Temp)#>
+					</cfcase>
 					<cfdefaultcase>
 						<cfoutput>#GeoCodeResultFormattedAddressType[1].XMLText#</cfoutput><hr>
 						<cfdump var="#XMLDocument#">
@@ -298,6 +393,15 @@ http://www.apache.org/licenses/LICENSE-2.0
 		<cfif not isDefined("FORM.formSubmit")>
 			<cflock timeout="60" scope="Session" type="Exclusive">
 				<cfset Session.FormErrors = #ArrayNew()#>
+
+				<cfquery name="Session.getPaymentTerms" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+					Select TContent_ID, PaymentTerms, dateCreated, lastUpdated, lastUpdateBy, Active
+					From p_inv_PaymentTerms
+					Where Site_ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#rc.$.siteConfig('siteID')#"> and
+						Active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+					Order by PaymentTerms
+				</cfquery>
+
 			</cflock>
 		<cfelseif isDefined("FORM.formSubmit")>
 			<cflock timeout="60" scope="SESSION" type="Exclusive">
@@ -314,29 +418,64 @@ http://www.apache.org/licenses/LICENSE-2.0
 				<cflocation url="?#HTMLEditFormat(rc.pc.getPackage())#action=admin:customers.newcustomer&PerformAction=ReEnterAddress&SiteID=#rc.$.siteConfig('siteID')#" addtoken="false">
 			<cfelse>
 				<cfset CombinedPhysicalAddress = #AddressGeoCoded[1].AddressStreetNumber# & " " & #AddressGeoCoded[1].AddressStreetNameShort#>
-				<cfquery name="insertNewBusiness" result="insertNewBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
-					Insert into p_inv_Customers(BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, PhysicalZip4, dateCreated, lastUpdated, lastUpdateBy, Site_ID, Student_ADM)
-					Values("#FORM.BusinessName#", "#Variables.CombinedPhysicalAddress#", "#Trim(Variables.AddressGeoCoded[1].AddressCityName)#", "#Trim(Variables.AddressGeoCoded[1].AddressStateNameShort)#", "#Trim(Variables.AddressGeoCoded[1].AddressZipCode)#", "#Trim(Variables.AddressGeoCoded[1].AddressZipCodeFour)#", #Now()#, #Now()#, "#rc.$.currentUser('userName')#", "#rc.$.siteConfig('siteID')#", "#FORM.StudentADM#")
-				</cfquery>
-				<cfset newRecordID = insertNewBusiness.generatedkey>
-				<cfquery name="updateFacilityGeoCode" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
-					Update p_inv_Customers
-					Set GeoCode_Latitude = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressLatitude)#" cfsqltype="cf_sql_varchar">,
-						GeoCode_Longitude = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressLongitude)#" cfsqltype="cf_sql_varchar">,
-						<cfif isDefined("Variables.AddressGeoCoded[1].AddressTownshipNameLong")>
-							GeoCode_Township = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressTownshipNameLong)#" cfsqltype="cf_sql_varchar">,
+				<cftry>
+					<cfquery name="insertNewBusiness" result="insertNewBusiness" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Insert into p_inv_Customers(BusinessName, PhysicalAddress, PhysicalCity, PhysicalState, PhysicalZipCode, dateCreated, lastUpdated, lastUpdateBy, Site_ID)
+						Values("#FORM.BusinessName#", "#Variables.CombinedPhysicalAddress#", "#Trim(Variables.AddressGeoCoded[1].AddressCityName)#", "#Trim(Variables.AddressGeoCoded[1].AddressStateNameShort)#", "#Trim(Variables.AddressGeoCoded[1].AddressZipCode)#", #Now()#, #Now()#, "#rc.$.currentUser('userName')#", "#rc.$.siteConfig('siteID')#")
+					</cfquery>
+					<cfset newRecordID = insertNewBusiness.generatedkey>
+					<cfif isDefined("Variables.AddressGeoCoded[1].AddressZipCodeFour")>
+						<cfquery name="updateFacilityGeoCode" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+							Update p_inv_Customers
+							Set PhysicalZip4 = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressZipCodeFour)#" cfsqltype="cf_sql_varchar">
+							Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and
+								Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+						</cfquery>
+					</cfif>
+
+					<cfif isDefined("FORM.StudentADM")>
+						<cfif LEN(FORM.StudentADM) NEQ 0>
+							<cfquery name="updateFacilityGeoCode" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+								Update p_inv_Customers
+								Set Student_ADM = <cfqueryparam value="#FORM.StudentADM#" cfsqltype="cf_sql_integer">
+								Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and
+								Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+							</cfquery>
 						</cfif>
-						<cfif isDefined("Variables.AddressGeoCoded[1].NeighborhoodNameLong")>
-							GeoCode_Neighborhood = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].NeighborhoodNameLong)#" cfsqltype="cf_sql_varchar">,
-						</cfif>
-						GeoCode_StateLongName = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressStateNameLong)#" cfsqltype="cf_sql_varchar">,
-						GeoCode_CountryShortName = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressCountryNameShort)#" cfsqltype="cf_sql_varchar">,
-						isAddressVerified = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-						Active = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-						lastUpdated = #Now()#, lastUpdateBy = <cfqueryparam value="#rc.$.currentUser('userName')#" cfsqltype="cf_sql_varchar">
-					Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and
-						Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
-				</cfquery>
+					</cfif>
+
+					<cfquery name="updateFacilityGeoCode" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Update p_inv_Customers
+						Set GeoCode_Latitude = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressLatitude)#" cfsqltype="cf_sql_varchar">,
+							GeoCode_Longitude = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressLongitude)#" cfsqltype="cf_sql_varchar">,
+							<cfif isDefined("Variables.AddressGeoCoded[1].AddressTownshipNameLong")>
+								GeoCode_Township = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressTownshipNameLong)#" cfsqltype="cf_sql_varchar">,
+							</cfif>
+							<cfif isDefined("Variables.AddressGeoCoded[1].NeighborhoodNameLong")>
+								GeoCode_Neighborhood = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].NeighborhoodNameLong)#" cfsqltype="cf_sql_varchar">,
+							</cfif>
+							GeoCode_StateLongName = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressStateNameLong)#" cfsqltype="cf_sql_varchar">,
+							GeoCode_CountryShortName = <cfqueryparam value="#Trim(Variables.AddressGeoCoded[1].AddressCountryNameShort)#" cfsqltype="cf_sql_varchar">,
+							isAddressVerified = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+							Active = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+							lastUpdated = #Now()#, lastUpdateBy = <cfqueryparam value="#rc.$.currentUser('userName')#" cfsqltype="cf_sql_varchar">
+						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and
+							Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+					<cfcatch type="any">
+						<cfdump var="#CFCATCH#">
+						<cfabort>
+					</cfcatch>
+				</cftry>
+
+				<CFIF LEN(FORM.PaymentTerms)>
+					<cfquery name="updatePaymentTerms" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
+						Update p_inv_Customers
+						Set PaymentTerms = <cfqueryparam value="#FORM.PaymentTerms#" cfsqltype="cf_sql_integer">
+						Where TContent_ID = <cfqueryparam value="#variables.newRecordID#" cfsqltype="cf_sql_integer"> and Site_ID = <cfqueryparam value="#rc.$.siteConfig('siteID')#" cfsqltype="cf_sql_varchar">
+					</cfquery>
+				</CFIF>
+
 				<cfif LEN(FORM.BusinessVoice)>
 					<cfquery name="updateVendorPrimaryNumber" Datasource="#rc.$.globalConfig('datasource')#" username="#rc.$.globalConfig('dbusername')#" password="#rc.$.globalConfig('dbpassword')#">
 						Update p_inv_Customers

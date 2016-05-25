@@ -35,9 +35,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 </cfsilent>
 <cfsavecontent variable="local.newBody">
 	<cfoutput>
-		<link rel="stylesheet" href="/plugins/MuraInvoicing/library/bootstrap/css/bootstrap-theme.min.css" crossorigin="anonymous">
 		<div class="container-murafw1">
-
 			<!--- PRIMARY NAV --->
 			<div class="row-fluid">
 				<nav class="navbar navbar-murafw1">
@@ -64,24 +62,27 @@ http://www.apache.org/licenses/LICENSE-2.0
 							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:inventory')#">Inventory <span class="caret"></span></a>
 								<ul class="dropdown-menu">
-									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
-										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
+									<li class="<cfif rc.action eq 'admin:inventory.default'>active</cfif>">
+										<a href="#buildURL('admin:inventory.default')#"><i class="icon-home"></i> List Inventory</a>
 									</li>
 								</ul>
 							</li>
 							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:invoices')#">Invoices <span class="caret"></span></a>
 								<ul class="dropdown-menu">
-									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
-										<a href="#buildURL('admin:invoices.default')#"><i class="icon-home"></i> New Invoice</a>
+									<li class="<cfif rc.action eq 'admin:invoices.default'>active</cfif>">
+										<a href="#buildURL('admin:invoices.default')#"><i class="icon-home"></i> List Invoices</a>
+									</li>
+									<li class="<cfif rc.action eq 'admin:invoices.newinvoice'>active</cfif>">
+										<a href="#buildURL('admin:invoices.newinvoice')#"><i class="icon-home"></i> New Invoices</a>
 									</li>
 								</ul>
 							</li>
 							<li class="<cfif rc.action eq 'admin:customers'>active</cfif> dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#buildURL('admin:services')#">Services <span class="caret"></span></a>
 								<ul class="dropdown-menu">
-									<li class="<cfif rc.action eq 'admin:customers.newcustomer'>active</cfif>">
-										<a href="#buildURL('admin:customers.default')#"><i class="icon-home"></i> New Customer</a>
+									<li class="<cfif rc.action eq 'admin:services.default'>active</cfif>">
+										<a href="#buildURL('admin:services.default')#"><i class="icon-home"></i> List Services</a>
 									</li>
 								</ul>
 							</li>
@@ -173,6 +174,20 @@ http://www.apache.org/licenses/LICENSE-2.0
 						#body#
 					</div>
 				<cfelseif rc.action contains 'admin:invoices'>
+					<!--- SUB-NAV --->
+					<div class="span3">
+						<ul class="nav nav-list">
+							<li><A href="#buildURL('admin:customers')#">Invoices</a></li>
+							<li class="<cfif rc.action eq 'admin:invoices.newinvoice'>active</cfif>">
+								<a href="#buildURL('admin:invoices.newinvoice')#"><i class="icon-leaf"></i> New Invoice</a>
+							</li>
+						</ul>
+					</div>
+
+					<!--- BODY --->
+					<div class="span9">
+						#body#
+					</div>
 				<cfelseif rc.action contains 'admin:services'>
 				<cfelseif rc.action contains 'admin:reports'>
 				<cfelseif rc.action contains 'admin:settings'>
